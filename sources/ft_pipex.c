@@ -6,13 +6,13 @@
 /*   By: jandre <jandre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/07 11:58:02 by jandre            #+#    #+#             */
-/*   Updated: 2021/06/07 16:30:54 by jandre           ###   ########.fr       */
+/*   Updated: 2021/06/07 16:48:29 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-int pipex(t_pipex *pipex, char**envp)
+int ft_pipex(t_pipex *pipex, char**envp)
 {
 	int	pids[pipex->number_process];
 	int **pipes;
@@ -24,12 +24,12 @@ int pipex(t_pipex *pipex, char**envp)
 	i = 0;
 	pipes = malloc(sizeof(int *) * (pipex->number_process + 1));
 	if (!pipex)
-		return (error_malloc(pipex));
+		return (-1);
 	while (i < pipex->number_process + 1)
 	{
 		pipes[i] = malloc(sizeof(int) * 2);
 		if (!pipes[i])
-			return (error_malloc(pipex));
+			return (-1);
 	}
 	while (i < pipex->number_process + 1)
 	{
@@ -43,7 +43,7 @@ int pipex(t_pipex *pipex, char**envp)
 	{
 		pids[i] = fork();
 		if (pids[i] == -1)
-			return (error_fork(pipex, pipes));
+			return (-1);
 		// debut child process
 		if (pids[i] == 0) // ID process zero -> child process
 		{
@@ -78,10 +78,10 @@ int pipex(t_pipex *pipex, char**envp)
 			if (j >= 0)
 			{
 				if (execve(pipex->path[j], pipex->commands[i], envp) == -1)
-					return(error_execute(pipex, pipes));
+					return(-1);
 			}
 			else
-				return(error_execute(pipex, pipes));
+				return(-1);
 			close(pipes[i - 1][0]);
 			close(pipes[i][1]);
 			return (EXIT_SUCCESS);
@@ -101,23 +101,23 @@ int main(int argc, char **argv, char **envp)
 	pipex.number_process = argc - 3;
 	pipex.commands = malloc(sizeof(char **) * (pipex.number_process + 1));
 	if (!pipex.commands)
-		return (error_malloc(&pipex));
+		return (-1);
 	pipex.in_file = malloc(sizeof(char *) * ft_strlen(argv[1]));
 	if (!pipex.in_file)
-		return (error_malloc(&pipex));
+		return (-1);
 	pipex.out_file = malloc(sizeof(char *) * ft_strlen(argv[argc - 1]));
 	if (!pipex.out_file)
-		return (error_malloc(&pipex));
+		return (-1);
 	i = 0;
 	while (i < pipex.number_process)
 	{
 		// on rempli les commandses successives
 		pipex.commands[i] = ft_split(argv[i + 2], ' ');
 		if (!pipex.commands[i])
-			return (error_commands(&pipex));
+			return (-1);
 		i++;
 	}
 	pipex.commands[i] = NULL;
-	pipex(&pipex, envp);
+	ft_pipex(&pipex, envp);
 	return (0);
 }

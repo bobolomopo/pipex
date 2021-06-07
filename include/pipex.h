@@ -6,7 +6,7 @@
 /*   By: jandre <jandre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/07 11:52:50 by jandre            #+#    #+#             */
-/*   Updated: 2021/06/07 16:30:14 by jandre           ###   ########.fr       */
+/*   Updated: 2021/06/07 16:46:13 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ int 	error_malloc(t_pipex *pipex);
 int 	error_pipe(t_pipex *pipex, int **pipe);
 int		error_execute(t_pipex *pipex, int **pipe);
 int		error_fork(t_pipex *pipex, int **pipe);
-int 	pipex(t_pipex *pipex, char**envp);
+int		error_commands(t_pipex *pipex);
+int 	ft_pipex(t_pipex *pipex, char**envp);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
 
 #endif

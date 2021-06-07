@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jandre <Ajuln@hotmail.fr>                  +#+  +:+       +#+         #
+#    By: jandre <jandre@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/06 19:35:19 by jandre            #+#    #+#              #
-#    Updated: 2021/06/06 19:35:19 by jandre           ###   ########.fr        #
+#    Updated: 2021/06/07 16:03:08 by jandre           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ NAME = pipex
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 SRC_DIR = sources/
-SRCS = 
+SRCS = ft_error.c ft_get_path.c ft_pipex.c ft_split.c ft_strjoin.c \
+	ft_strlen.c ft_strncmp.c
 SRC =  $(addprefix $(SRC_DIR), $(SRCS))
 OBJ = $(SRC:.c=.o)
 

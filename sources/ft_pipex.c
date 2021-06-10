@@ -14,7 +14,7 @@
 
 int ft_pipex(t_pipex *pipex, char**envp)
 {
-	int	pids[pipex->number_process];
+	int	*pids;
 	int **pipes;
 	int	i;
 	int	j;
@@ -23,7 +23,7 @@ int ft_pipex(t_pipex *pipex, char**envp)
 	//////////
 	i = 0;
 	pipes = malloc(sizeof(int *) * (pipex->number_process + 1));
-	if (!pipex)
+	if (!pipes)
 		return (-1);
 	while (i < pipex->number_process + 1)
 	{
@@ -38,6 +38,10 @@ int ft_pipex(t_pipex *pipex, char**envp)
 		i++;
 	}
 	//////////
+	// allocation mémoire pids
+	pids = malloc(sizeof(int) * pipex->number_process);
+	if (!pids)
+		return (-1);
 	i = 0;
 	while (i < pipex->number_process)
 	{
@@ -82,8 +86,8 @@ int ft_pipex(t_pipex *pipex, char**envp)
 			}
 			else
 				return(-1);
-			close(pipes[i - 1][0]);
-			close(pipes[i][1]);
+			close(pipes[i][0]);
+			close(pipes[i + 1][1]);
 			return (EXIT_SUCCESS);
 		}
 	}

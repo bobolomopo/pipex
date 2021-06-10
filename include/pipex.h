@@ -23,7 +23,7 @@
 # include <limits.h>
 # include <sys/stat.h>
 # include <sys/types.h>
-# include <sys/wait.h>
+//# include <sys/wait.h>
 # include <errno.h>
 
 // Define
@@ -31,6 +31,8 @@
 # define EXIT_SUCCES 0
 # define STDOUT 1
 # define STDIN 0
+# define WRONG_ARG 1
+# define PIPE_FAILED 2
 
 // Structures
 

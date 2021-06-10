@@ -14,7 +14,7 @@ NAME = pipex
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 SRC_DIR = sources/
-SRCS = ft_error.c ft_get_path.c ft_pipex.c ft_split.c ft_strjoin.c \
+SRCS = ft_error.c ft_get_path.c ft_pipex2.c ft_split.c ft_strjoin.c \
 	ft_strlen.c ft_strncmp.c ft_substr.c ft_strdup.c
 SRC =  $(addprefix $(SRC_DIR), $(SRCS))
 OBJ = $(SRC:.c=.o)

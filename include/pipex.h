@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jandre <ajuln@hotmail.fr>                  +#+  +:+       +#+        */
+/*   By: jandre <jandre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/07 11:52:50 by jandre            #+#    #+#             */
-/*   Updated: 2021/06/10 18:52:35 by jandre           ###   ########.fr       */
+/*   Updated: 2021/06/11 15:08:51 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,14 @@
 # define STDIN 0
 # define WRONG_ARG 1
 # define PIPE_FAILED 2
+# define STDOUT 1
+# define STDin 0
 
 // Structures
 
 typedef struct s_pipex {
-	int		number_process;
 	char	***commands;
-	char	*in_file;
 	int		fd_in_file;
-	char	*out_file;
 	int		fd_out_file;
 	char	**path;
 }					t_pipex;

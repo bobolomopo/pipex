@@ -6,7 +6,7 @@
 /*   By: jandre <jandre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/07 12:08:02 by jandre            #+#    #+#             */
-/*   Updated: 2021/06/07 16:44:00 by jandre           ###   ########.fr       */
+/*   Updated: 2021/06/11 15:08:36 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ int error_malloc(t_pipex *pipex)
 	i = -1;
 	while (pipex->path[++i])
 		free(pipex->commands[i]);
-	perror(NULL);
 	exit(0);
 }
 
@@ -97,10 +96,6 @@ int	error_execute(t_pipex *pipex, int **pipe)
 		}
 		free(pipex->commands);
 	}
-	if (pipex->in_file)
-		free(pipex->in_file);
-	if (pipex->out_file)
-		free(pipex->out_file);
 	i = -1;
 	while (pipex->path[++i])
 		free(pipex->commands[i]);

@@ -5,123 +5,146 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jandre <jandre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/07 11:58:02 by jandre            #+#    #+#             */
-/*   Updated: 2021/06/07 16:48:29 by jandre           ###   ########.fr       */
+/*   Created: 2021/06/10 15:19:44 by jandre            #+#    #+#             */
+/*   Updated: 2021/06/11 15:09:56 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-int ft_pipex(t_pipex *pipex, char**envp)
+int	exit_msg(int msg)
 {
-	int	*pids;
-	int **pipes;
-	int	i;
-	int	j;
-
-	// Initialisation des pipes mettre fonction a part
-	//////////
-	i = 0;
-	pipes = malloc(sizeof(int *) * (pipex->number_process + 1));
-	if (!pipes)
-		return (-1);
-	while (i < pipex->number_process + 1)
-	{
-		pipes[i] = malloc(sizeof(int) * 2);
-		if (!pipes[i])
-			return (-1);
-	}
-	while (i < pipex->number_process + 1)
-	{
-		if (pipe(pipes[i]) == -1)
-			return (error_pipe(pipex, pipes));
-		i++;
-	}
-	//////////
-	// allocation mémoire pids
-	pids = malloc(sizeof(int) * pipex->number_process);
-	if (!pids)
-		return (-1);
-	i = 0;
-	while (i < pipex->number_process)
-	{
-		pids[i] = fork();
-		if (pids[i] == -1)
-			return (-1);
-		// debut child process
-		if (pids[i] == 0) // ID process zero -> child process
-		{
-			// Closing everypipe the current child doesnt need, can go into another fonction
-			///////////////////////
-			j = -1;
-			while (++j < pipex->number_process + 1)
-			{
-				if (i != j)
-					close(pipes[j][0]);
-				if (i + 1 != j)
-					close(pipes[j][1]);
-			}
-			/// on dup tout les infile outfile pour simuler les pipes
-			if (i != 0 && i != pipex->number_process)
-			{
-				dup2(pipes[i - 1][0], STDIN);
-				dup2(pipes[i][1], STDOUT);
-			}
-			else if (i != pipex->number_process)
-			{
-				dup2(pipes[0][0], pipex->fd_in_file);
-				dup2(pipes[i][1], STDOUT);
-			}
-			else
-			{
-				dup2(pipes[i - 1][0], STDIN);
-				dup2(pipes[i][1], pipex->fd_out_file);
-			}
-			//////////////////////
-			j = find_which_path(pipex, pipex->commands[i]);
-			if (j >= 0)
-			{
-				if (execve(pipex->path[j], pipex->commands[i], envp) == -1)
-					return(-1);
-			}
-			else
-				return(-1);
-			close(pipes[i][0]);
-			close(pipes[i + 1][1]);
-			return (EXIT_SUCCESS);
-		}
-	}
-	i = -1;
-	while (++i < pipex->number_process)
-		wait(NULL); // chaque processus parent attend que son processus child termine avant de terminer
-	return (EXIT_SUCCESS);
+	if (msg == WRONG_ARG)
+		write(1, "ERROR : type correct arguments like :\n\
+./pipex \"infile\" \"cmd1\" \"cmd2\" \"outfile\"\n", 79);
+	if (msg == PIPE_FAILED)
+		write(1, "Pipe failed\n", 12);
+	exit(0);
 }
 
-int main(int argc, char **argv, char **envp)
+int comm_not_found(char *str)
+{
+	write(1, "command not found: ", 19);
+	write(1, str, ft_strlen(str));
+	write(1, "\n", 1);
+	return (0);
+}
+
+int	write_msg(char *str)
+{
+	write(1, "zsh: No such file or directory: ", 32);
+	write(1, str, ft_strlen(str));
+	write(1, "\n", 1);
+	return (0);
+}
+
+void opening_files(int argc, char **argv, t_pipex *pipex)
+{
+	pipex->fd_in_file = open(argv[1], O_RDONLY);
+	pipex->fd_out_file = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC);
+	if (pipex->fd_in_file == -1)
+		write_msg(argv[1]);
+	return ;
+}
+
+int listing_commands(char **argv, t_pipex *pipex)
+{
+	pipex->commands = malloc(sizeof(char **) * 3);
+	if (!pipex->commands)
+		return (-1);
+	pipex->commands[2] = NULL;
+	pipex->commands[0] = ft_split(argv[2], ' ');
+	pipex->commands[1] = ft_split(argv[3], ' ');
+	if (!pipex->commands[0])
+		return (-1);
+	if (!pipex->commands[1])
+		return (-1);
+	return (0);
+}
+
+int	joining_path_commands(t_pipex *pipex)
+{
+	char 	*temp;
+	char	*temp2;
+	int		i;
+	int		j;
+	int		fd;
+
+	i = -1;
+	while (pipex->commands[++i])
+	{
+		j = -1;
+		while (pipex->path[++j])
+		{
+			temp = ft_strjoin(pipex->path[j], "/");
+			temp2 = temp;
+			temp = ft_strjoin(temp2, pipex->commands[i][0]);
+			free(temp2);
+			if (!temp)
+				return (-1);
+			fd = open(temp, O_RDONLY);
+			if (fd > 0)
+			{
+				free(pipex->commands[i][0]);
+				pipex->commands[i][0] = ft_strdup(temp);
+				if (!pipex->commands[i][0])
+					return (-1);
+				free(temp);
+				close(fd);
+				break ;
+			}
+			free(temp);
+		}
+		if (!pipex->path[j])
+			comm_not_found(pipex->commands[i][0]);
+	}
+	return (0);
+}
+
+int	main(int argc, char **argv, char **envp)
 {
 	t_pipex pipex;
-	int		i;
+	int		fd[2];
+	int		pid1;
+	int		pid2;
 
-	pipex.number_process = argc - 3;
-	pipex.commands = malloc(sizeof(char **) * (pipex.number_process + 1));
-	if (!pipex.commands)
-		return (-1);
-	pipex.in_file = malloc(sizeof(char *) * ft_strlen(argv[1]));
-	if (!pipex.in_file)
-		return (-1);
-	pipex.out_file = malloc(sizeof(char *) * ft_strlen(argv[argc - 1]));
-	if (!pipex.out_file)
-		return (-1);
-	i = 0;
-	while (i < pipex.number_process)
+	if (argc != 5)
+		return (exit_msg(WRONG_ARG));
+	opening_files(argc, argv, &pipex);
+	get_path(&pipex, envp);
+	listing_commands(argv, &pipex);
+	joining_path_commands(&pipex);
+	if (pipe(fd) < 0)
+		return (exit_msg(PIPE_FAILED));
+	if (pipex.fd_in_file > 0)
 	{
-		// on rempli les commandses successives
-		pipex.commands[i] = ft_split(argv[i + 2], ' ');
-		if (!pipex.commands[i])
+		pid1 = fork();
+		if (pid1 < 0)
 			return (-1);
-		i++;
+		if (pid1 == 0)
+		{
+			dup2(fd[1], STDOUT);
+			close(fd[0]);
+			close(fd[1]);
+			execve(pipex.commands[0][0], pipex.commands[0], envp);
+		}
+		wait(NULL);
 	}
-	pipex.commands[i] = NULL;
-	ft_pipex(&pipex, envp);
+	pid2 = fork();
+	if (pid2 < 0)
+		return (-1);
+	if (pid2 == 0)
+	{
+		dup2(fd[0], STDIN);
+		dup2(pipex.fd_out_file, STDOUT);
+		close(fd[0]);
+		close(fd[1]);
+		execve(pipex.commands[1][0], pipex.commands[1], envp);
+	}
+	close(fd[0]);
+	close(fd[1]);
+	close(pipex.fd_out_file);
+	close(pipex.fd_in_file);
+	wait(NULL);
 	return (0);
 }

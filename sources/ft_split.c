@@ -6,13 +6,13 @@
 /*   By: jandre <jandre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/07 12:33:12 by jandre            #+#    #+#             */
-/*   Updated: 2021/06/15 15:54:53 by jandre           ###   ########.fr       */
+/*   Updated: 2021/06/15 16:57:24 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-static int		ft_nbrwords(char const *s, char c)
+static int	ft_nbrwords(char const *s, char c)
 {
 	int		count;
 	int		i;
@@ -31,7 +31,7 @@ static int		ft_nbrwords(char const *s, char c)
 	return (count);
 }
 
-static char		**ft_refree(char **res, int index)
+static char	**ft_refree(char **res, int index)
 {
 	while (--index > 0)
 		free(res[index]);
@@ -39,7 +39,7 @@ static char		**ft_refree(char **res, int index)
 	return (NULL);
 }
 
-static char		**ft_write_words(char **result, int nbrmot,
+static char	**ft_write_words(char **result, int nbrmot,
 		const char *s, char c)
 {
 	int		i;
@@ -65,7 +65,7 @@ static char		**ft_write_words(char **result, int nbrmot,
 	return (result);
 }
 
-char			**ft_split(char	const *s, char c)
+char	**ft_split(char	const *s, char c)
 {
 	char	**result;
 	int		nbrmot;

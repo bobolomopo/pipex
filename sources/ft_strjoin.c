@@ -6,7 +6,7 @@
 /*   By: jandre <jandre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/07 14:04:52 by jandre            #+#    #+#             */
-/*   Updated: 2021/06/07 14:05:06 by jandre           ###   ########.fr       */
+/*   Updated: 2021/06/15 16:58:34 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	if (s1 == NULL || s2 == NULL)
 		return (NULL);
 	i = ft_strlen(s1) + ft_strlen(s2);
-	if (!(result = (char *)malloc(sizeof(char) * (i + 1))))
+	result = (char *)malloc(sizeof(char) * (i + 1));
+	if (!result)
 		return (NULL);
 	i = 0;
 	while (i < ft_strlen(s1))

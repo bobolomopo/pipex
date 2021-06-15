@@ -6,17 +6,17 @@
 /*   By: jandre <jandre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/07 12:58:14 by jandre            #+#    #+#             */
-/*   Updated: 2021/06/15 16:13:29 by jandre           ###   ########.fr       */
+/*   Updated: 2021/06/15 16:56:14 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-char *find_which_path(char **command, char **path)
+char	*find_which_path(char **command, char **path)
 {
-	int     temp_fd;
-	int     i;
-	char    *str;
+	int		temp_fd;
+	int		i;
+	char	*str;
 	char	*temp;
 
 	i = 0;
@@ -36,7 +36,7 @@ char *find_which_path(char **command, char **path)
 	return (str);
 }
 
-char **get_path(char **envp)
+char	**get_path(char **envp)
 {
 	char	**path;
 	char	*str;
@@ -57,7 +57,7 @@ char **get_path(char **envp)
 	return (path);
 }
 
-char *get_command(char **command, char **envp)
+char	*get_command(char **command, char **envp)
 {
 	int		i;
 	char	**path;

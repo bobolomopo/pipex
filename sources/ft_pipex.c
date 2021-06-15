@@ -6,7 +6,7 @@
 /*   By: jandre <jandre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/10 15:19:44 by jandre            #+#    #+#             */
-/*   Updated: 2021/06/15 17:36:37 by jandre           ###   ########.fr       */
+/*   Updated: 2021/06/15 18:02:58 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ int	main_process(int *pfd, char **argv, char **envp)
 	int		outfile;
 	char	**command;
 
-	outfile = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 644);
+	outfile = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR \
+		| S_IWUSR | S_IRGRP | S_IROTH);
 	if (outfile == -1)
 	{
 		error_outfile(argv);

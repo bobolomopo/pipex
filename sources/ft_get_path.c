@@ -6,55 +6,63 @@
 /*   By: jandre <jandre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/07 12:58:14 by jandre            #+#    #+#             */
-/*   Updated: 2021/06/11 15:38:22 by jandre           ###   ########.fr       */
+/*   Updated: 2021/06/15 16:13:29 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-int find_which_path(t_pipex *pipex, char **command, int *fd)
+char *find_which_path(char **command, char **path)
 {
-    int     temp_fd;
-    int     i;
-    char    *str;
+	int     temp_fd;
+	int     i;
+	char    *str;
+	char	*temp;
 
-    i = 0;
-    while (pipex->path[i])
-    {
-        str = ft_strjoin(pipex->path[i], command[0]);
-        if (!str)
-            return (ft_close(pipex, fd, 0));
-        temp_fd = open(str, O_RDONLY);
-        if (temp_fd != -1)
-            break ;
-        free(str);
-        close(temp_fd);
-        i++;
-    }
-    if (pipex->path[i] == NULL)
-        return (ft_close(pipex, fd, 0));
-    return (i);
+	i = 0;
+	command[0] = ft_strjoin("/", command[0]);
+	while (path[i])
+	{
+		str = ft_strjoin(path[i], command[0]);
+		temp = str;
+		temp_fd = open(str, O_RDONLY);
+		if (temp_fd != -1)
+			break ;
+		if (temp_fd != -1)
+			close(temp_fd);
+		i++;
+	}
+	command[0] = command[0] + 1;
+	return (str);
 }
 
-int	get_path(t_pipex *pipex, char **envp, int *fd)
+char **get_path(char **envp)
 {
-    int     i;
-    char    *str;
+	char	**path;
+	char	*str;
+	int		i;
 
-    i = 0;
-    while (envp[i])
-    {
-        if (ft_strncmp(envp[i], "PATH=", 4) == 0)
-        {
-            str = ft_strdup(envp[i] + 5);
-            if (!str)
-                return (ft_close(pipex, fd, 0));
-            pipex->path = ft_split(str, ':');
-            if (!pipex->path)
-                return (ft_close(pipex, fd, 0));
-            free(str);
-        }
-        i++;
-    }
-    return (EXIT_SUCCESS);
+	i = 0;
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], "PATH=", 4) == 0)
+		{
+			str = envp[i] + 5;
+			path = ft_split(str, ':');
+			if (!path)
+				exit(0);
+		}
+		i++;
+	}
+	return (path);
+}
+
+char *get_command(char **command, char **envp)
+{
+	int		i;
+	char	**path;
+
+	i = 0;
+	path = get_path(envp);
+	return (find_which_path(command, path));
 }

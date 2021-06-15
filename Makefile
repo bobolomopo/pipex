@@ -6,7 +6,7 @@
 #    By: jandre <jandre@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/06 19:35:19 by jandre            #+#    #+#              #
-#    Updated: 2021/06/11 15:20:24 by jandre           ###   ########.fr        #
+#    Updated: 2021/06/15 14:49:38 by jandre           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 SRC_DIR = sources/
 SRCS = ft_get_path.c ft_pipex.c ft_split.c ft_strjoin.c \
-	ft_strlen.c ft_strncmp.c ft_substr.c ft_strdup.c ft_close.c
+	ft_strlen.c ft_strncmp.c ft_substr.c ft_strdup.c
 SRC =  $(addprefix $(SRC_DIR), $(SRCS))
 OBJ = $(SRC:.c=.o)
 

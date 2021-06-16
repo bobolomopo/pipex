@@ -17,14 +17,12 @@ char	*find_which_path(char **command, char **path)
 	int		temp_fd;
 	int		i;
 	char	*str;
-	char	*temp;
 
 	i = 0;
 	command[0] = ft_strjoin("/", command[0]);
 	while (path[i])
 	{
 		str = ft_strjoin(path[i], command[0]);
-		temp = str;
 		temp_fd = open(str, O_RDONLY);
 		if (temp_fd != -1)
 			break ;
@@ -59,10 +57,8 @@ char	**get_path(char **envp)
 
 char	*get_command(char **command, char **envp)
 {
-	int		i;
 	char	**path;
 
-	i = 0;
 	path = get_path(envp);
 	return (find_which_path(command, path));
 }
